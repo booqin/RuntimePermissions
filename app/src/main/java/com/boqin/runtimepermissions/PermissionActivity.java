@@ -2,6 +2,7 @@ package com.boqin.runtimepermissions;
 
 import com.boqin.runtimepermissions.util.PermissionUtil;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -39,6 +40,7 @@ public class PermissionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mPermission = getIntent().getStringExtra(TAG);
         PermissionUtil.checkPermission(this, mPermission);
+        FragmentManager fragmentManager = getFragmentManager();
     }
 
     @Override
