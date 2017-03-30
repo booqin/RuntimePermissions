@@ -1,34 +1,20 @@
-package com.boqin.runtimepermissions.processor;
+package com.boqin.runtimepermissions.codegen;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.JavaFileObject;
 
-/**
- * TODO
- * Created by Boqin on 2017/3/29.
- * Modified by Boqin
- *
- * @Version
- */
-public class BqAnnotationProcessor extends AbstractProcessor{
+import com.boqin.runtimepermissions.BQAnnotation;
 
-    private Filer mFiler;
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        mFiler = processingEnv.getFiler();
-    }
-
+@SupportedAnnotationTypes("com.boqin.runtimepermissions.BQAnnotation")
+public class BQAnnotationProcessor extends AbstractProcessor{
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         StringBuilder builder = new StringBuilder()
@@ -38,7 +24,7 @@ public class BqAnnotationProcessor extends AbstractProcessor{
                 .append("\t\treturn \"");
 
         // for each javax.lang.model.element.Element annotated with the CustomAnnotation
-        for (Element element : roundEnv.getElementsAnnotatedWith(BqAnnotation.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(BQAnnotation.class)) {
             String objectType = element.getSimpleName().toString();
 
             // this is appending to the return statement

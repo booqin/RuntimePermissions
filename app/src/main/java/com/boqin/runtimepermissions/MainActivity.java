@@ -1,6 +1,6 @@
 package com.boqin.runtimepermissions;
 
-import com.boqin.runtimepermissions.processor.BqAnnotation;
+import com.boqin.runtimepermissions.generated.GeneratedClass;
 import com.boqin.runtimepermissions.util.PermissionUtil;
 
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-@BqAnnotation
+@BQAnnotation
 public class MainActivity extends AppCompatActivity {
 
     private Button mPermission;
@@ -53,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
     }
     void showCamera() {
         // NOTE: Perform action that requires the permission. If this is run by PermissionsDispatcher, the permission will have been granted
-        Toast.makeText(this, "权限请求成功", Toast.LENGTH_SHORT).show();
+
+        GeneratedClass generatedClass = new GeneratedClass();
+        Toast.makeText(this, generatedClass.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
 }
