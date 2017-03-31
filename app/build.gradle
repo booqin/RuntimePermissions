@@ -30,6 +30,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //    compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
     //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
-    compile project(':library')
     annotationProcessor project(':compiler')
+    compile project(':permissionapi')
 }

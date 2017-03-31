@@ -1,7 +1,6 @@
 package com.boqin.runtimepermissions;
 
-import com.boqin.runtimepermissions.generated.GeneratedClass;
-import com.boqin.runtimepermissions.util.PermissionUtil;
+import com.boqin.permissionapi.PermissionApiUtil;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,11 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-@BQAnnotation
 public class MainActivity extends AppCompatActivity {
 
-    private Button mPermission;
-
+    Button mPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +18,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mPermission = (Button) findViewById(R.id.bt_permission);
+
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                ComponentName componentName = new ComponentName(v.getContext(), CameraActivity.class);
 //                try {
 //                    ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_META_DATA);
-//                    String permission = activityInfo.metaData.getString("permission");
+//                    String permission = activityInfo.metaData.doPermission("permission");
 //
 //                    PermissionActivity.starActivity(v.getContext(), permission, new PermissionActivity.PermissionResultListen() {
 //                        @Override
@@ -46,16 +44,16 @@ public class MainActivity extends AppCompatActivity {
 //                } catch (PackageManager.NameNotFoundException e) {
 //                    e.printStackTrace();
 //                }
-                PermissionUtil.checkPermissionForIntent(MainActivity.this, CameraActivity.class, null);
+//                PermissionUtil.checkPermissionForIntent(MainActivity.this, CameraActivity.class, null);
+
+                PermissionApiUtil.doPermission(MainActivity.this);
             }
         });
-        showCamera();
     }
-    void showCamera() {
-        // NOTE: Perform action that requires the permission. If this is run by PermissionsDispatcher, the permission will have been granted
 
-        GeneratedClass generatedClass = new GeneratedClass();
-        Toast.makeText(this, generatedClass.getMessage(), Toast.LENGTH_SHORT).show();
+    @BQAnnotation
+    void showCamera() {
+        Toast.makeText(this, "Annotation", Toast.LENGTH_SHORT).show();
     }
 
 }

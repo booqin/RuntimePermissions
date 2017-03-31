@@ -1,4 +1,4 @@
-package com.boqin.api;
+package com.boqin.permissionapi;
 
 import org.junit.Test;
 

@@ -1,1 +1,1 @@
-include ':app', ':library', ':compiler', ':api'
+include ':app', ':library', ':compiler', ':permissionapi'
