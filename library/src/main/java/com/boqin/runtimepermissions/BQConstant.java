@@ -1,7 +1,7 @@
 package com.boqin.runtimepermissions;
 
 /**
- * 常量
+ * constant for annotation reflect
  * Created by Boqin on 2017/3/31.
  * Modified by Boqin
  *
@@ -9,4 +9,8 @@ package com.boqin.runtimepermissions;
  */
 public interface BQConstant {
     String CLASS_SUFFIX = "BqGen";
+
+    String METHOD_PERMISSION = "getPermissions";
+
+    String METHOD_PERMISSION_GRANTED = "doGranted";
 }

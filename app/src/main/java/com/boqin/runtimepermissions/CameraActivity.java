@@ -19,8 +19,6 @@ public class CameraActivity extends AppCompatActivity{
             @Nullable
                     Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String s = getIntent().getStringExtra("BQ");
-        Log.d("BQ", s);
 
     }
 
