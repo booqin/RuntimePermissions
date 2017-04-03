@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
  *
  * @Version
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface BQAnnotation {
-    String value() default "";
+    String[] value();
 }

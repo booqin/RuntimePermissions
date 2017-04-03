@@ -2,7 +2,6 @@ package com.boqin.permissionapi.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,16 +40,32 @@ public class PermissionFragment extends Fragment {
             @NonNull
                     int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (int grantResult : grantResults) {
-            switch (grantResult){
+//        for (int grantResult : grantResults) {
+//            switch (grantResult){
+//                case PackageManager.PERMISSION_GRANTED:
+//                    if(mPermissionsResultListenter!=null){
+//                        mPermissionsResultListenter.onGranted();
+//                    }
+//                    break;
+//                case PackageManager.PERMISSION_DENIED:
+//                    if(mPermissionsResultListenter!=null){
+//                        mPermissionsResultListenter.onDenied();
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+        for (int i = 0; i < grantResults.length; i++) {
+            switch (grantResults[i]){
                 case PackageManager.PERMISSION_GRANTED:
                     if(mPermissionsResultListenter!=null){
-                        mPermissionsResultListenter.onGranted();
+                        mPermissionsResultListenter.onGranted(permissions[i]);
                     }
                     break;
                 case PackageManager.PERMISSION_DENIED:
                     if(mPermissionsResultListenter!=null){
-                        mPermissionsResultListenter.onDenied();
+                        mPermissionsResultListenter.onDenied(permissions[i]);
                     }
                     break;
                 default:
@@ -74,12 +89,14 @@ public class PermissionFragment extends Fragment {
     public interface PermissionsResultListenter{
         /** 
          * 允许权限的回调
+         * @param permission
          */
-        void onGranted();
+        void onGranted(String permission);
         /**
          * 解决权限的回调
+         * @param permission
          */
-        void onDenied();
+        void onDenied(String permission);
     }
 
 }

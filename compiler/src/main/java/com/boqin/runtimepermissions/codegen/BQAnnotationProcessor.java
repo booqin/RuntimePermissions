@@ -1,5 +1,14 @@
 package com.boqin.runtimepermissions.codegen;
 
+import com.boqin.runtimepermissions.BQAnnotation;
+import com.boqin.runtimepermissions.BQConstant;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +23,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-
-import com.boqin.runtimepermissions.BQAnnotation;
-import com.boqin.runtimepermissions.BQConstant;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 @SupportedAnnotationTypes("com.boqin.runtimepermissions.BQAnnotation")
 public class BQAnnotationProcessor extends AbstractProcessor {
@@ -43,7 +43,7 @@ public class BQAnnotationProcessor extends AbstractProcessor {
         String packageName = null;
         String simpleName = null;
         TypeName typeName = null;
-        String content = "";
+        String[] content = null;
 
         for (Element element : roundEnv.getElementsAnnotatedWith(BQAnnotation.class)) {
             methodName = element.getSimpleName().toString();
@@ -75,23 +75,32 @@ public class BQAnnotationProcessor extends AbstractProcessor {
         return true;
     }
 
-    private TypeSpec createTypeSpec(String simpleName, String methodName, TypeName typeName, String targer, String permission) {
+    private TypeSpec createTypeSpec(String simpleName, String methodName, TypeName typeName, String targer, String[] permission) {
         return TypeSpec.classBuilder(simpleName + BQConstant.CLASS_SUFFIX)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addField(createFieldSpec())
                 .addMethod(createConstructor(permission))
-                .addMethods(createWithCheckMethods(methodName, typeName, targer))
+//                .addMethods(createWithCheckMethods(methodName, typeName, targer))
                 .addMethods(createPermissionsMethods())
                 .build();
     }
 
     private FieldSpec createFieldSpec() {
-        return FieldSpec.builder(String.class, "mPermission", Modifier.PRIVATE).build();
+        return FieldSpec.builder(String[].class, "mPermissions", Modifier.PRIVATE).build();
     }
 
-    private MethodSpec createConstructor(String permission) {
+    private MethodSpec createConstructor(String[] permissions) {
+        List<String> strings = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        if (permissions.length>0) {
+            stringBuilder.append("{");
+            for (String permission : permissions) {
+                stringBuilder.append("\""+permission+"\"").append(",");
+            }
+            stringBuilder.replace(stringBuilder.length()-1,stringBuilder.length(), "}");
+        }
         return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addCode(CodeBlock.builder().addStatement("mPermission = \u0024S", permission).build())
+                .addCode(CodeBlock.builder().addStatement("mPermissions = new String[] \u0024N", stringBuilder.toString()).build())
                 .build();
     }
 
@@ -109,7 +118,7 @@ public class BQAnnotationProcessor extends AbstractProcessor {
 
     private List<MethodSpec> createPermissionsMethods(){
         MethodSpec methodSpec = MethodSpec.methodBuilder(BQConstant.METHOD_PERMISSION).addModifiers(Modifier.PUBLIC)
-                .addCode(CodeBlock.builder().addStatement("return mPermission").build()).returns(String.class).build();
+                .addCode(CodeBlock.builder().addStatement("return mPermissions").build()).returns(String[].class).build();
         List<MethodSpec> list = new ArrayList<>();
         list.add(methodSpec);
         return list;
