@@ -12,8 +12,6 @@ import com.boqin.permissionapi.fragment.PermissionFragment;
 import com.boqin.runtimepermissions.BQConstant;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Desctiption: TODO
@@ -41,18 +39,19 @@ public class PermissionUtil {
      */
     private static void checkPermission(Activity activity, @NonNull String[] permissions) {
 //        String permission = getPermissionString(activity);
-        List<String> list = new ArrayList<>();
-        for (String permission : permissions) {
-            String pms = getRequestPermissionStrings(activity, permission);
-            if (pms != null) {
-                list.add(pms);
-            }
-        }
-        String[] strings = new String[list.size()];
-        list.toArray(strings);
-        if (strings.length>0) {
-            doRequest(activity, strings);
-        }
+//        List<String> list = new ArrayList<>();
+//        for (String permission : permissions) {
+//            String pms = getRequestPermissionStrings(activity, permission);
+//            if (pms != null) {
+//                list.add(pms);
+//            }
+//        }
+//        String[] strings = new String[list.size()];
+//        list.toArray(strings);
+//        if (strings.length>0) {
+//
+//        }
+        doRequest(activity, permissions);
     }
 
     private static String getRequestPermissionStrings(Activity activity, @NonNull String permission) {

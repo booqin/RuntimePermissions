@@ -12,5 +12,7 @@ public interface BQConstant {
 
     String METHOD_PERMISSION = "getPermissions";
 
+    String METHOD_GRANTED_PERMISSION = "getGrantedPermissions";
+
     String METHOD_PERMISSION_GRANTED = "doGranted";
 }

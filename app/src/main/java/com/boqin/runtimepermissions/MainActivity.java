@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import com.boqin.permissionapi.PermissionUtil;
 
-@BQAnnotation({Manifest.permission.READ_CONTACTS, Manifest.permission.CAMERA})
+@PermissionActivity({Manifest.permission.READ_CONTACTS, Manifest.permission.CAMERA})
 public class MainActivity extends AppCompatActivity {
 
     Button mPermission;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
+                PermissionUtil.tryPermission(MainActivity.this, null);
             }
 
         });
