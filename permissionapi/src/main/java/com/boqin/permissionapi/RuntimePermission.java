@@ -1,47 +1,49 @@
 package com.boqin.permissionapi;
 
+import java.lang.reflect.InvocationTargetException;
+
+import com.boqin.permissionapi.fragment.PermissionFragment;
+import com.boqin.runtimepermissions.AnnotationConstant;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-
-import com.boqin.permissionapi.fragment.PermissionFragment;
-import com.boqin.runtimepermissions.BQConstant;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
- * Desctiption: TODO
- * Created by Vito on 2017/4/3.
- * Email:developervito@163.com
- * ModifiedBy: Vito
- * ModifiedTime: 2017/4/3 20:09
- * ModifiedNotes: TODO
- * Version 1.0
+ * 工具类，封装processor生成代码的访问方法
+ * Created by Boqin on 2017/3/31.
+ * Modified by Boqin
+ *
+ * @Version
  */
 
-public class PermissionUtil {
+public class RuntimePermission {
+
+    /** fragment的标签值 */
+    private static final String TAG = "PERMISSION_TAG";
+
     /**
      * 请求权限操作
+     *
      * @param activity 宿主Activity
+     * @param permissionsResultListenter 回调接口
      */
-    public static void tryPermission(Activity activity, PermissionFragment.PermissionsResultListenter permissionsResultListenter){
+    public static void tryPermissionByAnnotation(Activity activity, PermissionFragment.PermissionsResultListenter permissionsResultListenter) {
         initFragment(activity, permissionsResultListenter);
-        String [] strings = getPermissionString(activity);
+        String[] strings = getPermissionString(activity);
+        if (strings == null) {
+            return;
+        }
         checkPermission(activity, strings);
     }
 
     /**
      * 请求权限操作
+     *
      * @param activity 宿主Activity
      */
-    public static void tryPermissionByAnnotation(final Activity activity){
-//        initFragment(activity, permissionsResultListenter);
-//        String [] strings = getPermissionString(activity);
-//        checkPermission(activity, strings);
+    public static void tryPermissionByAnnotation(final Activity activity) {
         PermissionFragment.PermissionsResultListenter permissionsResultListenter = new PermissionFragment.PermissionsResultListenter() {
             @Override
             public void onGranted(String permission) {
@@ -55,45 +57,52 @@ public class PermissionUtil {
         };
         initFragment(activity, permissionsResultListenter);
         String[] strings = getPermissionString(activity);
+        if (strings == null) {
+            return;
+        }
         checkPermission(activity, strings);
     }
 
     /**
      * 检查权限
      */
-    private static void checkPermission(Activity activity, @NonNull String[] permissions) {
+    private static void checkPermission(Activity activity,
+            @NonNull
+                    String[] permissions) {
         doRequest(activity, permissions);
     }
 
-    private static void doRequest(Activity activity, @NonNull String[] permissions) {
+    private static void doRequest(Activity activity,
+            @NonNull
+                    String[] permissions) {
         FragmentManager fragmentManager = activity.getFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag("T");
+        Fragment fragment = fragmentManager.findFragmentByTag(TAG);
         if (fragment == null) {
             fragment = new PermissionFragment();
             fragmentManager
                     .beginTransaction()
-                    .add(fragment, "T")
+                    .add(fragment, TAG)
                     .commitAllowingStateLoss();
             fragmentManager.executePendingTransactions();
         }
-        ((PermissionFragment)fragment).requestPermissions(
+        ((PermissionFragment) fragment).requestPermissions(
                 permissions);
     }
 
     /**
      * 初始化Fragment
-     * @param activity
+     *
      * @param permissionsResultListenter 回调接口
      */
     private static void initFragment(Activity activity, PermissionFragment.PermissionsResultListenter permissionsResultListenter) {
 
         FragmentManager fragmentManager = activity.getFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag("T");
+        Fragment fragment = fragmentManager.findFragmentByTag(TAG);
         if (fragment == null) {
             fragment = new PermissionFragment();
             fragmentManager
                     .beginTransaction()
-                    .add(fragment, "T")
+                    .add(fragment, TAG)
                     .commitAllowingStateLoss();
             fragmentManager.executePendingTransactions();
         }
@@ -106,11 +115,13 @@ public class PermissionUtil {
     /**
      * 获取权限名称
      */
-    private static String[] getPermissionString(Activity activity){
+    private static String[] getPermissionString(Activity activity) {
         Class cl = getClass(activity);
         String result[] = null;
         try {
-            result = (String[]) cl.getMethod(BQConstant.METHOD_PERMISSION).invoke(cl.newInstance());
+            if (cl != null) {
+                result = (String[]) cl.getMethod(AnnotationConstant.METHOD_PERMISSION).invoke(cl.newInstance());
+            }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -126,10 +137,14 @@ public class PermissionUtil {
     /**
      * 权限反馈
      */
-    private static void doPermissionFeed(Activity activity, String permission){
+    private static void doPermissionFeed(Activity activity, String permission) {
         Class cl = getClass(activity);
+
         try {
-            cl.getMethod(BQConstant.METHOD_PERMISSION_GRANTED, activity.getClass(), String.class).invoke(cl.newInstance(), activity, permission);
+            if (cl != null) {
+                cl.getMethod(AnnotationConstant.METHOD_PERMISSION_GRANTED, activity.getClass(), String.class)
+                        .invoke(cl.newInstance(), activity, permission);
+            }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -146,7 +161,7 @@ public class PermissionUtil {
      */
     private static Class getClass(Activity activity) {
         try {
-            String className = activity.getClass().getName() + BQConstant.CLASS_SUFFIX;
+            String className = activity.getClass().getName() + AnnotationConstant.CLASS_SUFFIX;
             return Class.forName(className);
 
         } catch (ClassNotFoundException e) {

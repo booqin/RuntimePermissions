@@ -5,9 +5,8 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
 
-import com.boqin.runtimepermissions.BQConstant;
+import com.boqin.runtimepermissions.AnnotationConstant;
 import com.boqin.runtimepermissions.PermissionActivity;
 import com.boqin.runtimepermissions.PermissionGranted;
 import com.boqin.runtimepermissions.codegen.bean.PermissionElement;
@@ -24,7 +23,7 @@ public class AnnotationUtil {
 
     public static PermissionElement getInfoFromAnnotation(Element element){
         PermissionElement permissionElement = new PermissionElement();
-        permissionElement.setGeneratedClassName(element.getSimpleName().toString()+ BQConstant.CLASS_SUFFIX);
+        permissionElement.setGeneratedClassName(element.getSimpleName().toString()+ AnnotationConstant.CLASS_SUFFIX);
         permissionElement.setContent(element.getAnnotation(PermissionActivity.class).value());
 
         List<Element> list = new ArrayList<>();

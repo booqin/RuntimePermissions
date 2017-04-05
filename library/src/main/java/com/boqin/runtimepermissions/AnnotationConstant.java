@@ -7,12 +7,11 @@ package com.boqin.runtimepermissions;
  *
  * @Version
  */
-public interface BQConstant {
-    String CLASS_SUFFIX = "BqGen";
+public interface AnnotationConstant {
+
+    String CLASS_SUFFIX = "Gen";
 
     String METHOD_PERMISSION = "getPermissions";
-
-    String METHOD_GRANTED_PERMISSION = "getGrantedPermissions";
 
     String METHOD_PERMISSION_GRANTED = "doGranted";
 }

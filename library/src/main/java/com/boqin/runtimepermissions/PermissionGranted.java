@@ -6,13 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Desctiption: TODO
- * Created by Vito on 2017/4/4.
- * Email:developervito@163.com
- * ModifiedBy: Vito
- * ModifiedTime: 2017/4/4 22:11
- * ModifiedNotes: TODO
- * Version 1.0
+ * custom annotation for method
+ * Created by Boqin on 2017/4/4.
+ * Modified by Boqin
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)

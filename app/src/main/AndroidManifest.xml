@@ -14,11 +14,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.boqin.runtimepermissions.CameraActivity" >
-            <meta-data android:name="permission"
-                android:value="android.permission.RECORD_AUDIO"/>
-        </activity>
-
     </application>
 
 </manifest>

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * custom annotation
+ * custom annotation for class
  * Created by Boqin on 2017/3/30.
  * Modified by Boqin
  *

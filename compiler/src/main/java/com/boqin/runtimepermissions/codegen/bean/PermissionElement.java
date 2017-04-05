@@ -8,7 +8,7 @@ import javax.lang.model.element.Element;
 import com.squareup.javapoet.TypeName;
 
 /**
- * TODO
+ * element about permission
  * Created by Boqin on 2017/4/5.
  * Modified by Boqin
  *
