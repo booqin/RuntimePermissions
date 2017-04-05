@@ -62,45 +62,7 @@ public class PermissionUtil {
      * 检查权限
      */
     private static void checkPermission(Activity activity, @NonNull String[] permissions) {
-//        String permission = getPermissionString(activity);
-//        List<String> list = new ArrayList<>();
-//        for (String permission : permissions) {
-//            String pms = getRequestPermissionStrings(activity, permission);
-//            if (pms != null) {
-//                list.add(pms);
-//            }
-//        }
-//        String[] strings = new String[list.size()];
-//        list.toArray(strings);
-//        if (strings.length>0) {
-//
-//        }
         doRequest(activity, permissions);
-    }
-
-    private static String getRequestPermissionStrings(Activity activity, @NonNull String permission) {
-        String requestPermmision = null;
-        if (ContextCompat.checkSelfPermission(activity,
-                permission)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    permission)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-                requestPermmision = permission;
-                // No explanation needed, we can request the permission.
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-        return requestPermmision;
     }
 
     private static void doRequest(Activity activity, @NonNull String[] permissions) {

@@ -24,25 +24,6 @@ public class MainActivity extends AppCompatActivity {
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PermissionApiUtil.doPermissionByAnnotation(MainActivity.this);
-//                PermissionUtil.tryPermission(MainActivity.this, new PermissionFragment.PermissionsResultListenter() {
-//                    @Override
-//                    public void onGranted(String permission) {
-//                        if (permission == Manifest.permission.READ_CONTACTS) {
-//
-//                        }else if (permission == Manifest.permission.CAMERA){
-//
-//                        }
-//                        Log.d("BQ", permission);
-//                    }
-//
-//                    @Override
-//                    public void onDenied(String permission) {
-//                        if (permission == Manifest.permission.READ_CONTACTS) {
-//                            Log.d("BQ", permission);
-//                        }
-//                    }
-//                });
                 PermissionUtil.tryPermissionByAnnotation(MainActivity.this);
             }
 

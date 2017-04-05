@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,9 +55,15 @@ public class PermissionFragment extends Fragment {
         String[] strings = new String[mDeniedList.size()];
         mDeniedList.toArray(strings);
         if (strings.length==0) {
-            return;
+            //没有未允许的情况下
+            for (String s : mGrantedList) {
+                if(mPermissionsResultListenter!=null){
+                    mPermissionsResultListenter.onGranted(s);
+                }
+            }
+        }else {
+            requestPermissions(strings, 0);
         }
-        requestPermissions(strings, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -68,10 +76,8 @@ public class PermissionFragment extends Fragment {
         for (int i = 0; i < grantResults.length; i++) {
             switch (grantResults[i]){
                 case PackageManager.PERMISSION_GRANTED:
-                    mDeniedList.remove(grantResults[i]);
-                    if(mPermissionsResultListenter!=null){
-                        mPermissionsResultListenter.onGranted(permissions[i]);
-                    }
+                    mDeniedList.remove(permissions[i]);
+                    mGrantedList.add(permissions[i]);
                     break;
                 case PackageManager.PERMISSION_DENIED:
                     if(mPermissionsResultListenter!=null){
@@ -80,6 +86,11 @@ public class PermissionFragment extends Fragment {
                     break;
                 default:
                     break;
+            }
+        }
+        for (String s : mGrantedList) {
+            if(mPermissionsResultListenter!=null){
+                mPermissionsResultListenter.onGranted(s);
             }
         }
         if(mDeniedList.size()!=0){
@@ -119,22 +130,9 @@ public class PermissionFragment extends Fragment {
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    permission)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-                mGrantedList.add(permission);
-            }
             mDeniedList.add(permission);
+        }else {
+            mGrantedList.add(permission);
         }
     }
 
@@ -143,13 +141,19 @@ public class PermissionFragment extends Fragment {
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-//                        request.proceed();
+                        Intent localIntent = new Intent();
+                        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                        localIntent.setData(Uri.fromParts("package", PermissionFragment.this.getActivity().getPackageName(), null));
+                        PermissionFragment.this.getActivity().startActivity(localIntent);
+
                     }
                 })
                 .setNegativeButton("退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
 //                        request.cancel();
+                        PermissionFragment.this.getActivity().finish();
                     }
                 })
                 .setCancelable(false)
