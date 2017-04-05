@@ -35,6 +35,30 @@ public class PermissionUtil {
     }
 
     /**
+     * 请求权限操作
+     * @param activity 宿主Activity
+     */
+    public static void tryPermissionByAnnotation(final Activity activity){
+//        initFragment(activity, permissionsResultListenter);
+//        String [] strings = getPermissionString(activity);
+//        checkPermission(activity, strings);
+        PermissionFragment.PermissionsResultListenter permissionsResultListenter = new PermissionFragment.PermissionsResultListenter() {
+            @Override
+            public void onGranted(String permission) {
+                doPermissionFeed(activity, permission);
+            }
+
+            @Override
+            public void onDenied(String permission) {
+
+            }
+        };
+        initFragment(activity, permissionsResultListenter);
+        String[] strings = getPermissionString(activity);
+        checkPermission(activity, strings);
+    }
+
+    /**
      * 检查权限
      */
     private static void checkPermission(Activity activity, @NonNull String[] permissions) {
@@ -140,10 +164,10 @@ public class PermissionUtil {
     /**
      * 权限反馈
      */
-    private static void doPermissionFeed(Activity activity){
+    private static void doPermissionFeed(Activity activity, String permission){
         Class cl = getClass(activity);
         try {
-            cl.getMethod(BQConstant.METHOD_PERMISSION_GRANTED, activity.getClass()).invoke(cl.newInstance(), activity);
+            cl.getMethod(BQConstant.METHOD_PERMISSION_GRANTED, activity.getClass(), String.class).invoke(cl.newInstance(), activity, permission);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

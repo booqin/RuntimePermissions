@@ -3,6 +3,7 @@ package com.boqin.runtimepermissions.codegen;
 import com.boqin.runtimepermissions.PermissionActivity;
 import com.boqin.runtimepermissions.BQConstant;
 import com.boqin.runtimepermissions.PermissionGranted;
+import com.boqin.runtimepermissions.codegen.bean.PermissionElement;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -40,49 +41,18 @@ public class BQAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        String methodName = null;
-        String packageName = null;
-        String simpleName = null;
-        TypeName typeName = null;
-        String[] content = null;
+
+        PermissionElement permissionElement = null;
+
+
 
         for (Element element : roundEnv.getElementsAnnotatedWith(PermissionActivity.class)) {
-            methodName = element.getSimpleName().toString();
-            content = element.getAnnotation(PermissionActivity.class).value();
-            if (element.getEnclosingElement() instanceof PackageElement) {
-                ((PackageElement) element.getEnclosingElement()).getQualifiedName();
-            }
-            Element e = element;
-            while (!(e.getEnclosingElement() instanceof PackageElement)) {
-                e = e.getEnclosingElement();
-            }
-            if (e.getEnclosingElement() instanceof PackageElement) {
-                packageName = ((PackageElement) e.getEnclosingElement()).getQualifiedName().toString();  //获取包名
-                simpleName = e.getSimpleName().toString();    //获取类名
-                typeName = TypeName.get(e.asType());
-            }
-
-        }
-
-        List<String> gMethodName = new ArrayList<>();
-        List<String> gSimpleName = new ArrayList<>();
-        List<TypeName> gTypeName = null;
-        String[] gContent = null;
-
-
-        for (Element element : roundEnv.getElementsAnnotatedWith(PermissionGranted.class)) {
-            gMethodName.add(element.getSimpleName().toString());
-            element.getAnnotation(PermissionGranted.class).value();
-
+            permissionElement = AnnotationUtil.getInfoFromAnnotation(element);
         }
 
 
-//        for (int i=0; i<2; i++){
-//            createPermissionFeedBack();
-//        }
-
-        if (typeName!=null) {
-            JavaFile javaFile = JavaFile.builder(packageName, createTypeSpec(simpleName, methodName, typeName, TARGET, content)).build();
+        if (permissionElement!=null) {
+            JavaFile javaFile = JavaFile.builder(permissionElement.getPackageName(), createTypeSpec(permissionElement)).build();
             try {
                 javaFile.writeTo(mFiler);
             } catch (IOException e) {
@@ -93,20 +63,20 @@ public class BQAnnotationProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void createPermissionFeedBack(String method, TypeName typeName, String targer) {
-        List<MethodSpec> list = new ArrayList<>();
-        MethodSpec methodSpec = MethodSpec.methodBuilder(method).addModifiers(Modifier.PUBLIC).addParameter(typeName, targer)
-                .addCode(CodeBlock.builder().add("\u0024N.\u0024N(", targer, method).addStatement(")").build()).build();
-        list.add(methodSpec);
+    public MethodSpec getMethodSpec(Element element, TypeName typeName) {
+        MethodSpec methodSpec = MethodSpec.methodBuilder(element.getSimpleName().toString()).addModifiers(Modifier.PUBLIC).addParameter(typeName, TARGET)
+                .addCode(CodeBlock.builder().add("\u0024N.\u0024N(", TARGET, element.getSimpleName().toString()).addStatement(")").build()).build();
+        return methodSpec;
     }
 
-    private TypeSpec createTypeSpec(String simpleName, String methodName, TypeName typeName, String targer, String[] permission) {
-        return TypeSpec.classBuilder(simpleName + BQConstant.CLASS_SUFFIX)
+    private TypeSpec createTypeSpec(PermissionElement permissionElement) {
+        return TypeSpec.classBuilder(permissionElement.getGeneratedClassName())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addField(createFieldSpec())
-                .addMethod(createConstructor(permission))
-                .addMethods(createWithCheckMethods(methodName, typeName, targer))
+                .addMethod(createConstructor(permissionElement.getContent()))
+                .addMethods(createWithCheckMethods(permissionElement.getGrantedElements(), permissionElement.getTypeName()))
                 .addMethods(createPermissionsMethods())
+                .addMethod(createGrantedMethode(permissionElement))
                 .build();
     }
 
@@ -128,44 +98,36 @@ public class BQAnnotationProcessor extends AbstractProcessor {
                 .addCode(CodeBlock.builder().addStatement("mPermissions = new String[] \u0024N", stringBuilder.toString()).build())
                 .build();
     }
-//
-//    private List<MethodSpec> createWithCheckMethods(String method, TypeName typeName, String targer){
-//        List<MethodSpec> list = new ArrayList<>();
-//        MethodSpec methodSpec = MethodSpec.methodBuilder(method).addModifiers(Modifier.PUBLIC).addParameter(typeName, targer)
-//                .addCode(CodeBlock.builder().add("\u0024N.\u0024N(", targer, method).addStatement(")").build()).build();
-//        list.add(methodSpec);
-//        MethodSpec methodSpec1 = MethodSpec.methodBuilder(BQConstant.METHOD_PERMISSION_GRANTED).addModifiers(Modifier.PUBLIC).addParameter(typeName, targer)
-//                .addCode(CodeBlock.builder().add("\u0024N(\u0024N", method, targer).addStatement(")").build())
-//                .build();
-//        list.add(methodSpec1);
-//        return list;
-//    }
 
-    private List<MethodSpec> createWithCheckMethods(String method, TypeName typeName, String targer){
+    private List<MethodSpec> createWithCheckMethods(List<Element> elements, TypeName typeName){
         List<MethodSpec> list = new ArrayList<>();
-        MethodSpec methodSpec = MethodSpec.methodBuilder(method).addModifiers(Modifier.PUBLIC).addParameter(typeName, targer)
-                .addCode(CodeBlock.builder().add("\u0024N.\u0024N(", targer, method).addStatement(")").build()).build();
-        list.add(methodSpec);
 
-        //创建Switch语句
-        MethodSpec methodSpec1 = MethodSpec.methodBuilder(BQConstant.METHOD_PERMISSION_GRANTED).addModifiers(Modifier.PUBLIC).addParameter(typeName, targer)
-                .addCode(CodeBlock.builder().add("\u0024N(\u0024N", method, targer).addStatement(")").build())
-                .build();
-        list.add(methodSpec1);
-
-        //1.获取权限
-        String permission = "";
-        //2.创建Switch语句
-//        MethodSpec methodSpec2 = MethodSpec.methodBuilder(BQConstant.METHOD_PERMISSION_GRANTED)
-//                .addModifiers(Modifier.PUBLIC)
-//                .addParameter(typeName, targer)
-//                .addParameter(String.class, permission)
-//                .beginControlFlow("switch(\u0024N)", permission)
-//                .addCode("case \u0024N:\n", "ppp")
-//                .addCode("case \u0024N:\n", "ppp")  //添加对于方法
-//                .addStatement("break")
+        for (Element element : elements) {
+            list.add(getMethodSpec(element, typeName));
+        }
 
         return list;
+    }
+
+    private MethodSpec createGrantedMethode(PermissionElement permissionElement){
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(BQConstant.METHOD_PERMISSION_GRANTED)
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(permissionElement.getTypeName(), TARGET)
+                .addParameter(String.class, "permission");
+        List<Element> list = permissionElement.getGrantedElements();
+        if (list.size()!=0) {
+            methodBuilder.beginControlFlow("switch(\u0024N)", "permission");
+            for (Element element : list) {
+                methodBuilder.addCode("case \"\u0024N\":\n", element.getAnnotation(PermissionGranted.class).value())
+                        .addCode("\u0024N(\u0024N", element.getSimpleName(), TARGET)
+                        .addStatement(")")
+                        .addStatement("break");
+            }
+            methodBuilder.addCode("default:\n")
+                    .addStatement("break");
+            methodBuilder.endControlFlow();
+        }
+        return methodBuilder.build();
     }
 
     private List<MethodSpec> createPermissionsMethods(){

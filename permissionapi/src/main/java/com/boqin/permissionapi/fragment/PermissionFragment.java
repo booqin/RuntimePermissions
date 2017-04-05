@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class PermissionFragment extends Fragment {
         mDeniedList.clear();
 
         for (String permission : permissions) {
-            getRequestPermissionString(getActivity(), permission);
+            initDeniedPermissionString(getActivity(), permission);
         }
 
         String[] strings = new String[mDeniedList.size()];
@@ -63,31 +65,10 @@ public class PermissionFragment extends Fragment {
             @NonNull
                     int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        for (int grantResult : grantResults) {
-//            switch (grantResult){
-//                case PackageManager.PERMISSION_GRANTED:
-//                    if(mPermissionsResultListenter!=null){
-//                        mPermissionsResultListenter.onGranted();
-//                    }
-//                    break;
-//                case PackageManager.PERMISSION_DENIED:
-//                    if(mPermissionsResultListenter!=null){
-//                        mPermissionsResultListenter.onDenied();
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
         for (int i = 0; i < grantResults.length; i++) {
             switch (grantResults[i]){
                 case PackageManager.PERMISSION_GRANTED:
                     mDeniedList.remove(grantResults[i]);
-//                    for (int i1 = 0; i1 < mDeniedList.size(); i1++) {
-//                        if (mDeniedList.get(i1).equals(permissions[i])) {
-//                            mDeniedList.remove(i1);
-//                        }
-//                    }
                     if(mPermissionsResultListenter!=null){
                         mPermissionsResultListenter.onGranted(permissions[i]);
                     }
@@ -131,30 +112,30 @@ public class PermissionFragment extends Fragment {
         void onDenied(String permission);
     }
 
-    private void getRequestPermissionString(Activity activity, @NonNull String permission) {
+    private void initDeniedPermissionString(Activity activity, @NonNull String permission) {
 
-//        if (ContextCompat.checkSelfPermission(activity,
-//                permission)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-//                    permission)) {
-//
-//                // Show an expanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//
-//
-//            } else {
-//                // No explanation needed, we can request the permission.
-//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                // app-defined int constant. The callback method gets the
-//                // result of the request.
-//                mGrantedList.add(permission);
-//            }
+        if (ContextCompat.checkSelfPermission(activity,
+                permission)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    permission)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+                mGrantedList.add(permission);
+            }
             mDeniedList.add(permission);
-//        }
+        }
     }
 
     private void showRationaleDialog(String message) {
