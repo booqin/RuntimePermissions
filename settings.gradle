@@ -1,1 +1,1 @@
-include ':app', ':library', ':compiler', ':permissionapi'
+include ':app', ':library', ':compiler', ':runtime-permission'
