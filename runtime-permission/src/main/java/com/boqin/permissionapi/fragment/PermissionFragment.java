@@ -12,11 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 权限相关的Fragment，有对应的生命周期，同时有获取权限请求结果的回调方法
@@ -27,11 +28,18 @@ import java.util.List;
  */
 public class PermissionFragment extends Fragment {
 
-    private List<String> mGrantedList;
-    private List<String> mDeniedList;
+    private List<String> mGrantedList = new ArrayList<>();
+    private List<String> mDeniedList = new ArrayList<>();
+    private List<String> mPermissions = new ArrayList<>();
+    /**
+     * 是否需要回调标志位
+     */
+    private Map<String, Boolean> mIsCallBackFlagMap = new HashMap<>();
 
     /** 权限请求结果回调接口 */
-    private PermissionsResultListenter mPermissionsResultListenter;
+    private PermissionsResultListener mPermissionsResultListener;
+
+    private boolean isNeedRequestPermissions = false;
 
     @Override
     public void onCreate(
@@ -39,31 +47,45 @@ public class PermissionFragment extends Fragment {
                     Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        mGrantedList = new ArrayList<>();
-        mDeniedList = new ArrayList<>();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (isNeedRequestPermissions) {
+            String[] strings = new String[mPermissions.size()];
+            mPermissions.toArray(strings);
+            doRequestPermissions(strings);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public void requestPermissions(@NonNull String[] permissions) {
-        mGrantedList.clear();
-        mDeniedList.clear();
-
-        for (String permission : permissions) {
-            initDeniedPermissionString(getActivity(), permission);
-        }
-
+    public void requestPermissions() {
+        isNeedRequestPermissions = false;
         String[] strings = new String[mDeniedList.size()];
         mDeniedList.toArray(strings);
         if (strings.length==0) {
             //没有未允许的情况下
             for (String s : mGrantedList) {
-                if(mPermissionsResultListenter!=null){
-                    mPermissionsResultListenter.onGranted(s);
+                if(mPermissionsResultListener !=null){
+                    mPermissionsResultListener.onGranted(s);
                 }
             }
         }else {
             requestPermissions(strings, 0);
         }
+    }
+
+
+
+    public void doRequestPermissions(@NonNull String[] permissions) {
+        mGrantedList.clear();
+        mDeniedList.clear();
+        mPermissions.clear();
+        for (String permission : permissions) {
+            initPermissionState(getActivity(), permission);
+        }
+        requestPermissions();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -80,8 +102,8 @@ public class PermissionFragment extends Fragment {
                     mGrantedList.add(permissions[i]);
                     break;
                 case PackageManager.PERMISSION_DENIED:
-                    if(mPermissionsResultListenter!=null){
-                        mPermissionsResultListenter.onDenied(permissions[i]);
+                    if(mPermissionsResultListener !=null){
+                        mPermissionsResultListener.onDenied(permissions[i]);
                     }
                     break;
                 default:
@@ -89,10 +111,11 @@ public class PermissionFragment extends Fragment {
             }
         }
         for (String s : mGrantedList) {
-            if(mPermissionsResultListenter!=null){
-                mPermissionsResultListenter.onGranted(s);
+            if(mPermissionsResultListener !=null){
+                mPermissionsResultListener.onGranted(s);
             }
         }
+        //存在未被授权的权限，弹窗提示
         if(mDeniedList.size()!=0){
             showRationaleDialog(mDeniedList.toString());
         }
@@ -100,17 +123,17 @@ public class PermissionFragment extends Fragment {
 
     /**
      * 设置对应接口
-     * @param permissionsResultListenter
+     * @param permissionsResultListener
      */
-    public void setPermissionsResultListenter(PermissionsResultListenter permissionsResultListenter){
-        mPermissionsResultListenter = permissionsResultListenter;
+    public void setPermissionsResultListenter(PermissionsResultListener permissionsResultListener){
+        mPermissionsResultListener = permissionsResultListener;
     }
 
     /**
      * 权限结果相关接口
      * @description: Created by Boqin on 2017/4/1 17:15
      */
-    public interface PermissionsResultListenter{
+    public interface PermissionsResultListener {
         /** 
          * 允许权限的回调
          * @param permission
@@ -123,8 +146,8 @@ public class PermissionFragment extends Fragment {
         void onDenied(String permission);
     }
 
-    private void initDeniedPermissionString(Activity activity, @NonNull String permission) {
-
+    private void initPermissionState(Activity activity, @NonNull String permission) {
+        mPermissions.add(permission);
         if (ContextCompat.checkSelfPermission(activity,
                 permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -146,13 +169,12 @@ public class PermissionFragment extends Fragment {
                         localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
                         localIntent.setData(Uri.fromParts("package", PermissionFragment.this.getActivity().getPackageName(), null));
                         PermissionFragment.this.getActivity().startActivity(localIntent);
-
+                        isNeedRequestPermissions = true;
                     }
                 })
                 .setNegativeButton("退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
-//                        request.cancel();
                         PermissionFragment.this.getActivity().finish();
                     }
                 })

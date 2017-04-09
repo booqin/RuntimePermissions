@@ -1,14 +1,16 @@
 package com.boqin.runtimepermissions;
 
-import com.boqin.permissionapi.RuntimePermission;
-
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-@PermissionActivity({Manifest.permission.READ_CONTACTS, Manifest.permission.CAMERA})
+import com.boqin.permissionapi.RuntimePermission;
+
+@PermissionActivity(Manifest.permission.READ_CONTACTS)
 public class MainActivity extends AppCompatActivity {
 
     private Button mPermission;
@@ -20,12 +22,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mPermission = (Button) findViewById(R.id.bt_permission);
         mTextView = (TextView) findViewById(R.id.text);
-        RuntimePermission.tryPermissionByAnnotation(this);
+        RuntimePermission.tryPermissionByAnnotation(MainActivity.this);
 
+        mPermission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
-    @PermissionGranted(Manifest.permission.CAMERA)
+    @PermissionGranted(Manifest.permission.READ_CONTACTS)
     public void initCamera(){
-        mTextView.setText("camera is granted");
+        mTextView.setText("READ_CONTACTS is granted");
     }
 }

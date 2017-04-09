@@ -46,16 +46,17 @@ public class AnnotationProcessor extends AbstractProcessor {
         //get annotation to PermissionElement
         for (Element element : roundEnv.getElementsAnnotatedWith(PermissionActivity.class)) {
             permissionElement = AnnotationUtil.getInfoFromAnnotation(element);
-        }
-
-        if (permissionElement!=null) {
-            JavaFile javaFile = JavaFile.builder(permissionElement.getPackageName(), createTypeSpec(permissionElement)).build();
-            try {
-                javaFile.writeTo(mFiler);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (permissionElement!=null) {
+                JavaFile javaFile = JavaFile.builder(permissionElement.getPackageName(), createTypeSpec(permissionElement)).build();
+                try {
+                    javaFile.writeTo(mFiler);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+
 
         return true;
     }
