@@ -8,6 +8,7 @@ import com.boqin.permissionapi.fragment.PermissionFragment;
 import com.boqin.runtimepermissions.AnnotationConstant;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * 工具类，封装processor生成代码的访问方法
@@ -19,9 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class RuntimePermission {
 
-    /**
-     * fragment的标签值
-     */
+    /** fragment的标签值 */
     private static final String TAG = "PERMISSION_TAG";
 
 
@@ -34,7 +33,20 @@ public class RuntimePermission {
      */
     public static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener) {
 
-        initPermissionFragment(activity, strings, permissionsResultListener);
+        initPermissionFragment(activity, strings, permissionsResultListener, true);
+    }
+
+    /**
+     * 请求权限操作
+     *
+     * @param activity                  宿主Activity
+     * @param strings                   权限组
+     * @param permissionsResultListener 回调接口
+     * @param isMustGranted             是否必须允许
+     */
+    public static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
+
+        initPermissionFragment(activity, strings, permissionsResultListener, isMustGranted);
     }
 
     /**
@@ -43,6 +55,16 @@ public class RuntimePermission {
      * @param activity 宿主Activity
      */
     public static void tryPermissionByAnnotation(final Activity activity) {
+        tryPermissionByAnnotation(activity, true);
+    }
+
+    /**
+     * 请求权限操作
+     *
+     * @param activity 宿主Activity
+     * @param isMustGranted 是否必须允许
+     */
+    public static void tryPermissionByAnnotation(final Activity activity, boolean isMustGranted) {
         PermissionFragment.PermissionsResultListener permissionsResultListener = new PermissionFragment.PermissionsResultListener() {
             @Override
             public void onGranted(String permission) {
@@ -53,12 +75,17 @@ public class RuntimePermission {
             public void onDenied(String permission) {
 
             }
+
+            @Override
+            public String getRationaleMessage(List<String> permissions) {
+                return null;
+            }
         };
         String[] strings = getPermissionStringFromAnno(activity);
         if (strings == null) {
             return;
         }
-        tryPermission(activity, strings, permissionsResultListener);
+        tryPermission(activity, strings, permissionsResultListener, isMustGranted);
     }
 
     /**
@@ -66,7 +93,7 @@ public class RuntimePermission {
      *
      * @param permissionsResultListener 回调接口
      */
-    private static void initPermissionFragment(Activity activity, String[] permissions, PermissionFragment.PermissionsResultListener permissionsResultListener) {
+    private static void initPermissionFragment(Activity activity, String[] permissions, PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
 
         FragmentManager fragmentManager = activity.getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(TAG);
@@ -82,7 +109,7 @@ public class RuntimePermission {
         if (fragment instanceof PermissionFragment) {
             ((PermissionFragment) fragment).setPermissionsResultListenter(permissionsResultListener);
             ((PermissionFragment) fragment).doRequestPermissions(
-                    permissions);
+                    permissions, isMustGranted);
         }
     }
 

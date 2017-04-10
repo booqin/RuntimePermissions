@@ -10,6 +10,13 @@ import android.widget.TextView;
 
 import com.boqin.permissionapi.RuntimePermission;
 
+/**
+ * Demo
+ * Created by Boqin on 2017/3/31.
+ * Modified by Boqin
+ *
+ * @Version
+ */
 @PermissionActivity(Manifest.permission.READ_CONTACTS)
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mPermission = (Button) findViewById(R.id.bt_permission);
         mTextView = (TextView) findViewById(R.id.text);
-        RuntimePermission.tryPermissionByAnnotation(MainActivity.this);
+        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
 
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override

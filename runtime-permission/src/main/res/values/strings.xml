@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PermissionAPI</string>
+    <string name="rationale_msg">当前操作必须要 %1$s 权限，请在设置页开启</string>
 </resources>

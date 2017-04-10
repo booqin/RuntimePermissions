@@ -10,13 +10,11 @@ import android.widget.Toast;
 import com.boqin.permissionapi.RuntimePermission;
 
 /**
- * Desctiption: TODO
- * Created by Vito on 2017/4/9.
- * Email:developervito@163.com
- * ModifiedBy: Vito
- * ModifiedTime: 2017/4/9 15:59
- * ModifiedNotes: TODO
- * Version 1.0
+ * 模拟照相权限
+ * Created by Boqin on 2017/4/9.
+ * Modified by Boqin
+ *
+ * @Version
  */
 @PermissionActivity(Manifest.permission.CAMERA)
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener{
