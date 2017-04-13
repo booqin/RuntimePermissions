@@ -75,7 +75,6 @@ public class RuntimePermission {
             public void onDenied(String permission) {
 
             }
-
             @Override
             public String getRationaleMessage(List<String> permissions) {
                 return null;
