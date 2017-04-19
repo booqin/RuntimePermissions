@@ -1,5 +1,7 @@
 package com.boqin.runtimepermissions;
 
+import static com.boqin.runtimepermissions.AnnotationConstant.ALL_GRANTED;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,5 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
 public @interface PermissionGranted {
-    String value() default "";
+    String value() default ALL_GRANTED;
 }

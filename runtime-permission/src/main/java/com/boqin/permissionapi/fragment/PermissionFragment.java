@@ -1,5 +1,7 @@
 package com.boqin.permissionapi.fragment;
 
+import static com.boqin.runtimepermissions.AnnotationConstant.ALL_GRANTED;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +84,9 @@ public class PermissionFragment extends Fragment {
             String pms = PermissionMapUtil.getPermissionNames(mDeniedList);
 
             showRationaleDialog(getContext().getResources().getString(R.string.rationale_msg, pms));
+        }else {
+            //全部通过
+            mPermissionsResultListener.onGranted(ALL_GRANTED);
         }
     }
 
@@ -196,6 +201,7 @@ public class PermissionFragment extends Fragment {
      * @description: Created by Boqin on 2017/4/1 17:15
      */
     public interface PermissionsResultListener {
+
         /**
          * 允许权限的回调
          */

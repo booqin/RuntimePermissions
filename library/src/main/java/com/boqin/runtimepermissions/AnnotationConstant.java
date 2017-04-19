@@ -14,4 +14,6 @@ public interface AnnotationConstant {
     String METHOD_PERMISSION = "getPermissions";
 
     String METHOD_PERMISSION_GRANTED = "doGranted";
+
+    String ALL_GRANTED = "me.boqin.permission";
 }

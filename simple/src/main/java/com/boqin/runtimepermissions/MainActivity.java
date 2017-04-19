@@ -18,7 +18,7 @@ import com.boqin.permissionapi.RuntimePermission;
  *
  * @Version
  */
-@PermissionActivity(Manifest.permission.READ_CONTACTS)
+@PermissionActivity({Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_COARSE_LOCATION})
 public class MainActivity extends AppCompatActivity {
 
     private Button mPermission;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mPermission = (Button) findViewById(R.id.bt_permission);
 
-        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
+        RuntimePermission.tryPermissionByAnnotation(MainActivity.this);
 
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @PermissionGranted(Manifest.permission.READ_CONTACTS)
+    @PermissionGranted
     public void initCamera(){
         Toast.makeText(this, "READ_CONTACTS is granted", Toast.LENGTH_SHORT).show();
     }
