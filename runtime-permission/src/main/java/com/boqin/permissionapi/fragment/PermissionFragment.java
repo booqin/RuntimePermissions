@@ -120,6 +120,7 @@ public class PermissionFragment extends Fragment {
                     mPermissionsResultListener.onGranted(s);
                 }
             }
+            mPermissionsResultListener.onGranted(ALL_GRANTED);
         } else {
             requestPermissions(strings, 0);
         }

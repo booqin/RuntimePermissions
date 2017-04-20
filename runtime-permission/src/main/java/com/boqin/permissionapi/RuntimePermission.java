@@ -31,7 +31,7 @@ public class RuntimePermission {
      * @param strings                   权限组
      * @param permissionsResultListener 回调接口
      */
-    public static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener) {
+    private static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener) {
 
         initPermissionFragment(activity, strings, permissionsResultListener, true);
     }
@@ -44,7 +44,7 @@ public class RuntimePermission {
      * @param permissionsResultListener 回调接口
      * @param isMustGranted             是否必须允许
      */
-    public static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
+    private static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
 
         initPermissionFragment(activity, strings, permissionsResultListener, isMustGranted);
     }
