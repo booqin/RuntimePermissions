@@ -81,3 +81,4 @@ public class MainActivity extends AppCompatActivity {
 
 # 注意事项
 　　由于动态权限申请的结果回调到_onRequestPermissionsResult_中，而该方法存在与Activity中，所以__@PermissionActivity只适用与Activity__，同时为了最大程度的精简代码，只提供了@PermissionGranted来实现权限被许可情况下的回调的一个无参方法，__@PermissionGranted需要在@PermissionActivity注解下的Activity中才生效__，这种依赖关系可以通过lint来提示开发者，这里暂时不做处理。
+　　Android SDK提供了注解功能的支持包，其中可以合理的使用@RequiresPermission注解，该注解会检查在manifest中是否声明该权限，并会显示对应的警告。
