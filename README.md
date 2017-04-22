@@ -12,6 +12,7 @@
 
 ### 1.添加依赖
 在你app的build.gradle中添加如下依赖：
+
 ```
 dependencies {
     compile 'com.xinguangnet.permission:runtime-permissions:1.0.0-SNAPSHOT'
@@ -21,17 +22,22 @@ dependencies {
 
 ### 2.添加权限
 - 在你需要设置权限的app中添加相应权限到manifest中，如camera:
+
 ```xml
 <uses-permission android:name="android.permission.CAMERA"/>
 ```
+
 - 在需要使用对应权限的Activity中设置注解：
+
 ```java
 @PermissionActivity(Manifest.permission.CAMERA)
 public class MainActivity extends AppCompatActivity {
 	……
 }
 ```
+
 注解_@PermissionActivity_支持字符串数组，所以你可以通过一下方式添加多个权限：
+
 ```java
 @PermissionActivity({Manifest.permission.READ_CONTACTS, Manifest.permission.CAMERA})
 ```
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 ### 3.权限回调
 　　在RuntimePermission中可以通过注解@PermissionGranted完成授权结果的回调。注解在于其简洁，RuntimePermission只提供了权限许可时的注解@PermissionGranted，因为在使用上该注解可以满足绝大部分开发，同时过多的注解回导致代码的混乱，从而适得其反。  
 　　对于你需要做的，只要在需要回调的方法（无参方法）上添加该备注，同时声明对应的权限即可：
+
 ```java
     @PermissionGranted(Manifest.permission.CAMERA)
     public void initCamera(){
@@ -46,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 ```
 　　如果需要所有权限都被授权后，再做回调处理，可以通过一个无参注解来实现：
+
 ```java
     @PermissionGranted  
     public void allGranted(){
@@ -56,11 +64,13 @@ public class MainActivity extends AppCompatActivity {
 　　后续可能会开放更多注解回调。
 
 ### 4.开启请求
-　　完成以上的代码后，可以通过RuntimePermission执行权限的动态申请，必传参数为acticity，该方法默认强制需要授权所有权限后才能运行该Activity。注解回调的请求:
+　　完成以上的代码后，可以通过RuntimePermission执行权限的动态申请，必传参数为acticity，该方法默认强制需要授权所有权限后才能运行该Activity。注解回调的请求:  
+
 ```java
     RuntimePermission.tryPermissionByAnnotation(Activity activity);
 ```
 　　如果不需要强制授权，可以通过如下方法，设置false即可：
+
 ```java
     RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
 ```
