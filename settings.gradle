@@ -1,1 +1,1 @@
-include ':simple', ':library', ':compiler', ':runtime-permission'
+include ':simple', ':permission-annotations', ':compiler', ':runtime-permission'

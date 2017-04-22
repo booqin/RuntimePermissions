@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RuntimePermissions.iml" filepath="$PROJECT_DIR$/RuntimePermissions.iml" />
       <module fileurl="file://$PROJECT_DIR$/compiler/compiler.iml" filepath="$PROJECT_DIR$/compiler/compiler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/permission-annotations/permission-annotations.iml" filepath="$PROJECT_DIR$/permission-annotations/permission-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtime-permission/runtime-permission.iml" filepath="$PROJECT_DIR$/runtime-permission/runtime-permission.iml" />
       <module fileurl="file://$PROJECT_DIR$/simple/simple.iml" filepath="$PROJECT_DIR$/simple/simple.iml" />
     </modules>
