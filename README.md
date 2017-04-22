@@ -5,8 +5,8 @@
 　　RuntimePermission提供了两种方法，但不管使用哪一种，使用者都需要知道哪个Activity需要使用敏感权限，以及使用哪些敏感权限，这是运行时授权的基本要求。
 - 直接使用注解的方式:   
 　　该方式简单，直观，但_注解只适用与Activity_，且提供的接口有限，该方式可以应付绝大多数运行时请求权限的需求。
-- 适用接口的形式:  
-　　该方法是弥补注解的不足，提供更多接口，适用场景也更广，缺点的需要实现更多接口，不方便阅读。  
+- ~~接口的形式:~~  
+　　~~该方法是弥补注解的不足，提供更多接口，适用场景也更广，缺点的需要实现更多接口，不方便阅读。~~ 
 
 ## 使用注解
 
@@ -14,8 +14,8 @@
 在你app的build.gradle中添加如下依赖：
 ```
 dependencies {
-  compile 'xxx'
-  annotationProcessor 'xxx'
+    compile 'com.xinguangnet.permission:runtime-permissions:1.0.0-SNAPSHOT'
+    annotationProcessor 'com.xinguangnet.permission:compiler:1.0.0-SNAPSHOT'
 }
 ```
 
@@ -45,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
         ……
     }
 ```
+　　如果需要所有权限都被授权后，再做回调处理，可以通过一个无参注解来实现：
+```java
+    @PermissionGranted  
+    public void allGranted(){
+        ……
+    }
+```  
+
 　　后续可能会开放更多注解回调。
 
 ### 4.开启请求
@@ -58,36 +66,8 @@ public class MainActivity extends AppCompatActivity {
 ```
 
 ## 使用接口
-　　首先一样需要进行依赖添加，然后在manifest中声明好权限。
-### 开启请求
-　　在你需要权限的地方使用，比如点击事件，Activity中的onCreate等调用如下代码
-```java
-    RuntimePermission.tryPermission(Activity activity, String[] permissions, PermissionFragment.PermissionsResultListener permissionsResultListener)
-```
-　　你需要在该方法中传入需要处理的权限，然后通过回调进行相应的处理。理论上使用该方法执行效率略高于注解。  
-　　当我们需要更多的回调处理时，可以通过接口实现，通过该接口你可以获取每个请求授权的结果，你可以不局限与在Activity中使用（可以在Fragment中）。
-```java
-    /**
-     * 权限结果相关接口
-     * @description: Created by Boqin on 2017/4/1 17:15
-     */
-    public interface PermissionsResultListenter{
-        /** 
-         * 允许权限的回调
-         * @param permission
-         */
-        void onGranted(String permission);
-        /**
-         * 解决权限的回调
-         * @param permission
-         */
-        void onDenied(String permission);
-         /**
-         * 获取说明信息，在权限被拒绝后提示框中使用
-         */
-        String getRationaleMessage(List<String> permissions);
-    }
-```
+　　为了尽量提高开发效率，暂时不开放接口调用，视使用情况在后续版本中决定是否提供。
+　　
 
 # 注意事项
 　　由于动态权限申请的结果回调到_onRequestPermissionsResult_中，而该方法存在与Activity中，所以__@PermissionActivity只适用与Activity__，同时为了最大程度的精简代码，只提供了@PermissionGranted来实现权限被许可情况下的回调的一个无参方法，__@PermissionGranted需要在@PermissionActivity注解下的Activity中才生效__，这种依赖关系可以通过lint来提示开发者，这里暂时不做处理。
