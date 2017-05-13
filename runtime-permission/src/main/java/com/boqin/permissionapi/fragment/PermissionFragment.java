@@ -31,6 +31,9 @@ import android.support.v4.content.ContextCompat;
  */
 public class PermissionFragment extends Fragment {
 
+    private static final String POSITIVE_STRING = "确定";
+    private static final String NEGATIVE_EXIT = "退出";
+    private static final String NEGATIVE_CANCEL = "取消";
     private List<String> mGrantedList = new ArrayList<>();
     private List<String> mDeniedList = new ArrayList<>();
     private List<String> mPermissions = new ArrayList<>();
@@ -167,33 +170,36 @@ public class PermissionFragment extends Fragment {
     }
 
     private void showRationaleDialog(String message) {
-        if (mIsMustGranted) {
-            new AlertDialog.Builder(PermissionFragment.this.getActivity())
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(
-                                @NonNull
-                                        DialogInterface dialog, int which) {
-                            Intent localIntent = new Intent();
-                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                            localIntent.setData(Uri.fromParts("package", PermissionFragment.this.getActivity().getPackageName(), null));
-                            PermissionFragment.this.getActivity().startActivity(localIntent);
-                            isNeedRequestPermissions = true;
-                        }
-                    })
-                    .setNegativeButton("退出", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(
-                                @NonNull
-                                        DialogInterface dialog, int which) {
+        new AlertDialog.Builder(PermissionFragment.this.getActivity())
+                .setPositiveButton(POSITIVE_STRING, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(
+                            @NonNull
+                                    DialogInterface dialog, int which) {
+                        Intent localIntent = new Intent();
+                        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                        localIntent.setData(Uri.fromParts("package", PermissionFragment.this.getActivity().getPackageName(), null));
+                        PermissionFragment.this.getActivity().startActivity(localIntent);
+                        isNeedRequestPermissions = true;
+                    }
+                })
+                .setNegativeButton(mIsMustGranted ? NEGATIVE_EXIT : NEGATIVE_CANCEL, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(
+                            @NonNull
+                                    DialogInterface dialog, int which) {
+                        if (mIsMustGranted) {
                             PermissionFragment.this.getActivity().finish();
+                        } else {
+                            dialog.dismiss();
                         }
-                    })
-                    .setCancelable(false)
-                    .setMessage(message)
-                    .show();
-        }
+
+                    }
+                })
+                .setCancelable(false)
+                .setMessage(message)
+                .show();
     }
 
     /**
