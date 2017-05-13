@@ -11,6 +11,16 @@
 ## 使用注解
 
 ### 1.添加依赖
+在project下的build.gradle添加maven地址：
+```
+allprojects {
+    dependencies {
+        repositories {
+            maven { url http://172.16.1.193:8081/repository/maven-snapshots/ }
+        }
+    }
+}
+```
 在你app的build.gradle中添加如下依赖：
 
 ```
