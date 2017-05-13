@@ -1,14 +1,14 @@
 package com.boqin.permissionapi;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import com.boqin.permissionapi.fragment.PermissionFragment;
 import com.boqin.runtimepermissions.AnnotationConstant;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 
 /**
  * 工具类，封装processor生成代码的访问方法
@@ -23,6 +23,74 @@ public class RuntimePermission {
     /** fragment的标签值 */
     private static final String TAG = "PERMISSION_TAG";
 
+    /**
+     * 请求权限操作
+     *
+     * @param activity 宿主Activity
+     */
+    public static void tryPermissionByAnnotation(final Activity activity) {
+        tryPermissionByAnnotation(activity, true);
+    }
+
+    /**
+     * 请求权限操作
+     *
+     * @param activity      宿主Activity
+     * @param isMustGranted 是否必须允许
+     */
+    public static void tryPermissionByAnnotation(final Activity activity, boolean isMustGranted) {
+        PermissionFragment.PermissionsResultListener permissionsResultListener = new PermissionFragment.PermissionsResultListener() {
+            @Override
+            public void onGranted(String permission) {
+                doPermissionFeed(activity, permission);
+            }
+
+            @Override
+            public void onDenied(String permission) {
+
+            }
+
+            @Override
+            public String getRationaleMessage(List<String> permissions) {
+                return null;
+            }
+        };
+        String[] strings = getPermissionStringFromAnno(activity);
+        if (strings == null) {
+            return;
+        }
+        tryPermission(activity, strings, permissionsResultListener, isMustGranted);
+    }
+
+    /**
+     * 请求权限操作
+     * 该操作会清除之前的权限请求，请避免在同一事件中多次调用该方法
+     * @param activity    宿主Activity
+     * @param permissions 申请指定权限
+     */
+    public static void tryPermissionByAnnotation(final Activity activity, String... permissions) {
+        PermissionFragment.PermissionsResultListener permissionsResultListener = new PermissionFragment.PermissionsResultListener() {
+            @Override
+            public void onGranted(String permission) {
+                doPermissionFeed(activity, permission);
+            }
+
+            @Override
+            public void onDenied(String permission) {
+
+            }
+
+            @Override
+            public String getRationaleMessage(List<String> permissions) {
+                return null;
+            }
+        };
+        String[] strings = permissions;
+        if (strings == null) {
+            return;
+        }
+        tryPermission(activity, strings, permissionsResultListener, false);
+    }
 
     /**
      * 请求权限操作
@@ -44,47 +112,10 @@ public class RuntimePermission {
      * @param permissionsResultListener 回调接口
      * @param isMustGranted             是否必须允许
      */
-    private static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
+    private static void tryPermission(Activity activity, String[] strings, PermissionFragment.PermissionsResultListener permissionsResultListener,
+            boolean isMustGranted) {
 
         initPermissionFragment(activity, strings, permissionsResultListener, isMustGranted);
-    }
-
-    /**
-     * 请求权限操作
-     *
-     * @param activity 宿主Activity
-     */
-    public static void tryPermissionByAnnotation(final Activity activity) {
-        tryPermissionByAnnotation(activity, true);
-    }
-
-    /**
-     * 请求权限操作
-     *
-     * @param activity 宿主Activity
-     * @param isMustGranted 是否必须允许
-     */
-    public static void tryPermissionByAnnotation(final Activity activity, boolean isMustGranted) {
-        PermissionFragment.PermissionsResultListener permissionsResultListener = new PermissionFragment.PermissionsResultListener() {
-            @Override
-            public void onGranted(String permission) {
-                doPermissionFeed(activity, permission);
-            }
-
-            @Override
-            public void onDenied(String permission) {
-
-            }
-            @Override
-            public String getRationaleMessage(List<String> permissions) {
-                return null;
-            }
-        };
-        String[] strings = getPermissionStringFromAnno(activity);
-        if (strings == null) {
-            return;
-        }
-        tryPermission(activity, strings, permissionsResultListener, isMustGranted);
     }
 
     /**
@@ -92,7 +123,8 @@ public class RuntimePermission {
      *
      * @param permissionsResultListener 回调接口
      */
-    private static void initPermissionFragment(Activity activity, String[] permissions, PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
+    private static void initPermissionFragment(Activity activity, String[] permissions,
+            PermissionFragment.PermissionsResultListener permissionsResultListener, boolean isMustGranted) {
 
         FragmentManager fragmentManager = activity.getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(TAG);
@@ -122,17 +154,13 @@ public class RuntimePermission {
             if (cl != null) {
                 result = (String[]) cl.getMethod(AnnotationConstant.METHOD_PERMISSION).invoke(cl.newInstance());
             }
-        }
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
-        catch (InstantiationException e) {
+        } catch (InstantiationException e) {
             e.printStackTrace();
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
         return result;
@@ -149,17 +177,13 @@ public class RuntimePermission {
                 cl.getMethod(AnnotationConstant.METHOD_PERMISSION_GRANTED, activity.getClass(), String.class)
                         .invoke(cl.newInstance(), activity, permission);
             }
-        }
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
-        catch (InstantiationException e) {
+        } catch (InstantiationException e) {
             e.printStackTrace();
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
     }
@@ -172,8 +196,7 @@ public class RuntimePermission {
             String className = activity.getClass().getName() + AnnotationConstant.CLASS_SUFFIX;
             return Class.forName(className);
 
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 

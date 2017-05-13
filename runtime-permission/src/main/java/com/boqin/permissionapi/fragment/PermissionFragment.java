@@ -104,7 +104,12 @@ public class PermissionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (isNeedRequestPermissions&&mIsMustGranted) {
+//        if (isNeedRequestPermissions&&mIsMustGranted) {
+//            String[] strings = new String[mPermissions.size()];
+//            mPermissions.toArray(strings);
+//            doRequestPermissions(strings, mIsMustGranted);
+//        }
+        if (isNeedRequestPermissions) {
             String[] strings = new String[mPermissions.size()];
             mPermissions.toArray(strings);
             doRequestPermissions(strings, mIsMustGranted);

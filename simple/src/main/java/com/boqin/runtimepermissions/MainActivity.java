@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mPermission = (Button) findViewById(R.id.bt_permission);
 
-        RuntimePermission.tryPermissionByAnnotation(MainActivity.this);
+//        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
+        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_COARSE_LOCATION);
 
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override
