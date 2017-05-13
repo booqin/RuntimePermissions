@@ -1,3 +1,6 @@
+# version
+__1.0.1-SNAPSHOT__
+
 # 前言
 　　Google在Android6.0版本中添加了一些新特性，其中之一就是运行时请求权限，用户可以拒绝应用对敏感权限的请求。而对于android开发者，我们只需要将targetSdkVersion配置为23+就能使用该特性。网上已经存在一些流行的解决方案，比如使用注解的[PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher)，通过Rxjava实现的[RxPermissions](https://github.com/tbruyelle/RxPermissions)。前者使用直观，但是注解过多，而且需要自己调用注解生成的类文件，而RxPermissions使用方便（通过Fragment管理权限相关的回调方法），不过需要掌握Rxjava的相关知识，并且不易阅读。结合两者的特点，实现了[RuntimePermission](https://github.com/booqin/RuntimePermissions)。
 
@@ -25,8 +28,8 @@ allprojects {
 
 ```
 dependencies {
-    compile 'com.xinguangnet.permission:runtime-permissions:1.0.0-SNAPSHOT'
-    annotationProcessor 'com.xinguangnet.permission:compiler:1.0.0-SNAPSHOT'
+    compile 'com.xinguangnet.permission:runtime-permissions:version'
+    annotationProcessor 'com.xinguangnet.permission:compiler:version'
 }
 ```
 
@@ -82,7 +85,11 @@ public class MainActivity extends AppCompatActivity {
 　　如果不需要强制授权，可以通过如下方法，设置false即可：
 
 ```java
-    RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
+    RuntimePermission.tryPermissionByAnnotation(final Activity activity, boolean isMustGranted);
+```
+　　单需要指定请求某权限时，使用如下方法：
+```java
+    RuntimePermission.tryPermissionByAnnotation(final Activity activity, String... permissions);
 ```
 
 ## 使用接口
@@ -90,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 　　
 # TODO
 - 添加对Fragment的支持
-- 对在多个权限中根据需求执行单个权限的请求
+- ~~对在多个权限中根据需求执行单个权限的请求~~已在v1.0.1中添加
 
 # 注意事项
 　　由于动态权限申请的结果回调到_onRequestPermissionsResult_中，而该方法存在与Activity中，所以__@PermissionActivity只适用与Activity__，同时为了最大程度的精简代码，只提供了@PermissionGranted来实现权限被许可情况下的回调的一个无参方法，__@PermissionGranted需要在@PermissionActivity注解下的Activity中才生效__，这种依赖关系可以通过lint来提示开发者，这里暂时不做处理。
