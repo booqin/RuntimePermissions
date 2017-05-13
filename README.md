@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
 ## 使用接口
 　　为了尽量提高开发效率，暂时不开放接口调用，视使用情况在后续版本中决定是否提供。
 　　
+# TODO
+- 添加对Fragment的支持
+- 对在多个权限中根据需求执行单个权限的请求
 
 # 注意事项
 　　由于动态权限申请的结果回调到_onRequestPermissionsResult_中，而该方法存在与Activity中，所以__@PermissionActivity只适用与Activity__，同时为了最大程度的精简代码，只提供了@PermissionGranted来实现权限被许可情况下的回调的一个无参方法，__@PermissionGranted需要在@PermissionActivity注解下的Activity中才生效__，这种依赖关系可以通过lint来提示开发者，这里暂时不做处理。
