@@ -11,7 +11,7 @@
             <option value="$PROJECT_DIR$/compiler" />
             <option value="$PROJECT_DIR$/permission-annotations" />
             <option value="$PROJECT_DIR$/runtime-permission" />
-            <option value="$PROJECT_DIR$/simple" />
+            <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
