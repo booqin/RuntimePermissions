@@ -19,7 +19,7 @@ __1.0.1-SNAPSHOT__
 allprojects {
     dependencies {
         repositories {
-            maven { url http://172.16.1.193:8081/repository/maven-snapshots/ }
+            maven { url http://172.16.1.194:8081/repository/maven-snapshots/ }
         }
     }
 }
