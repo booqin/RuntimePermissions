@@ -16,12 +16,12 @@ if (isReleaseBuild()) {
     println 'SNAPSHOTS BUILD'
     // 下面的库地址指向的是我们私有仓库的snapshots 仓库
     mavenRepositoryUrl = hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-            : "http://172.16.1.193:8081/repository/maven-snapshots/"
+            : "http://172.16.2.73:8081/repository/maven-snapshots/"
 } else {
     println 'SNAPSHOTS BUILD'
     // 下面的库地址指向的是我们私有仓库的snapshots 仓库
     mavenRepositoryUrl = hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-            : "http://172.16.1.193:8081/repository/maven-snapshots/"
+            : "http://172.16.2.73:8081/repository/maven-snapshots/"
 }
 // NEXUS_USERNAME等变量在我们主项目的gradle.properties中可以找到
 def getRepositoryUsername() {

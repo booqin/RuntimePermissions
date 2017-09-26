@@ -3,10 +3,13 @@ package com.boqin.permissionapi.fragment;
 import static com.boqin.runtimepermissions.AnnotationConstant.ALL_GRANTED;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.boqin.permissionapi.R;
 import com.boqin.permissionapi.config.PermissionMapUtil;
+import com.boqin.permissionapi.config.PermissionOpsUtil;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -34,9 +37,10 @@ public class PermissionFragment extends Fragment {
     private static final String POSITIVE_STRING = "确定";
     private static final String NEGATIVE_EXIT = "退出";
     private static final String NEGATIVE_CANCEL = "取消";
-    private List<String> mGrantedList = new ArrayList<>();
-    private List<String> mDeniedList = new ArrayList<>();
-    private List<String> mPermissions = new ArrayList<>();
+    private Set<String> mGrantedList = new HashSet<>();
+    private Set<String> mDeniedList = new HashSet<>();
+    private Set<String> mPermissions = new HashSet<>();
+    private List<String> mGrantedResults = new ArrayList<>();
     /**
      * 是否需要回调标志位
      */
@@ -69,6 +73,14 @@ public class PermissionFragment extends Fragment {
                     break;
             }
         }
+
+        for (int i = 0; i < permissions.length; i++) {
+            if(!PermissionOpsUtil.checkOpsPermission(getContext(), permissions[i])){
+                mGrantedList.remove(permissions[i]);
+                mDeniedList.add(permissions[i]);
+            }
+        }
+
         for (String s : mGrantedList) {
             if (mPermissionsResultListener != null) {
                 mPermissionsResultListener.onGranted(s);
@@ -76,15 +88,17 @@ public class PermissionFragment extends Fragment {
         }
         //存在未被授权的权限，弹窗提示
         if (mDeniedList.size() != 0) {
+            mGrantedResults.clear();
+            mGrantedResults.addAll(mDeniedList);
             if (mPermissionsResultListener!=null) {
-                String msg = mPermissionsResultListener.getRationaleMessage(mDeniedList);
+                String msg = mPermissionsResultListener.getRationaleMessage(mGrantedResults);
                 if (msg!=null&&!msg.isEmpty()) {
                     showRationaleDialog(msg);
                     return;
                 }
             }
 
-            String pms = PermissionMapUtil.getPermissionNames(mDeniedList);
+            String pms = PermissionMapUtil.getPermissionNames(mGrantedResults);
 
             showRationaleDialog(getContext().getResources().getString(R.string.rationale_msg, pms));
         }else {
@@ -163,14 +177,16 @@ public class PermissionFragment extends Fragment {
             @NonNull
                     String permission) {
         mPermissions.add(permission);
-        if (ContextCompat.checkSelfPermission(activity,
-                permission)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(activity,
+                    permission)
+                    != PackageManager.PERMISSION_GRANTED || !PermissionOpsUtil.checkOpsPermission(getContext(), permission)) {
 
-            // Should we show an explanation?
-            mDeniedList.add(permission);
-        } else {
-            mGrantedList.add(permission);
+                // Should we show an explanation?
+                mDeniedList.add(permission);
+            } else {
+                mGrantedList.add(permission);
+            }
         }
     }
 

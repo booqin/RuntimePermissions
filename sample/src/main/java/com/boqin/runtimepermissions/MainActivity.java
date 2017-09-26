@@ -29,13 +29,13 @@ public class MainActivity extends AppCompatActivity {
         mPermission = (Button) findViewById(R.id.bt_permission);
 
 //        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
-        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_COARSE_LOCATION);
 
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
-                MainActivity.this.startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+//                MainActivity.this.startActivity(intent);
+                RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
             }
         });
     }
