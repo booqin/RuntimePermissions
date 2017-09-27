@@ -75,7 +75,7 @@ public class PermissionFragment extends Fragment {
         }
 
         for (int i = 0; i < permissions.length; i++) {
-            if(!PermissionOpsUtil.checkOpsPermission(getContext(), permissions[i])){
+            if(PermissionOpsUtil.isDeniedOpsPermission(getContext(), permissions[i])){
                 mGrantedList.remove(permissions[i]);
                 mDeniedList.add(permissions[i]);
             }
@@ -180,7 +180,7 @@ public class PermissionFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(activity,
                     permission)
-                    != PackageManager.PERMISSION_GRANTED || !PermissionOpsUtil.checkOpsPermission(getContext(), permission)) {
+                    != PackageManager.PERMISSION_GRANTED || PermissionOpsUtil.isDeniedOpsPermission(getContext(), permission)) {
 
                 // Should we show an explanation?
                 mDeniedList.add(permission);

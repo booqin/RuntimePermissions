@@ -1,4 +1,4 @@
-package com.boqin.permissionapi.config;
+package com.boqin.runtimepermissions;
 
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -32,21 +32,6 @@ public class PermissionOpsUtil {
             return opsMode == AppOpsManager.MODE_ALLOWED;
         } catch (Exception ex) {
             return true;
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static boolean isDeniedOpsPermission(Context context, String permission) {
-        try {
-            AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-            String opsName = AppOpsManager.permissionToOp(permission);
-            if (opsName == null) {
-                return false;
-            }
-            int opsMode = appOpsManager.checkOpNoThrow(opsName, android.os.Process.myUid(), context.getPackageName());
-            return opsMode == AppOpsManager.MODE_IGNORED;
-        } catch (Exception ex) {
-            return false;
         }
     }
 

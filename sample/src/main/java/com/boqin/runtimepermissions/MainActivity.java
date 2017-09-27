@@ -4,6 +4,7 @@ import com.boqin.permissionapi.RuntimePermission;
 
 import android.Manifest;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,11 +22,11 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private Button mPermission;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mPermission = (Button) findViewById(R.id.bt_permission);
 
 //        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);

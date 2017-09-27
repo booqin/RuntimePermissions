@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 //apply from: 'maven_push.gradle'
+//apply from: rootProject.ext.tp["baseApp"]
 
 android {
     compileSdkVersion 25
