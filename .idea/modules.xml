@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/RuntimePermissions.iml" filepath="$PROJECT_DIR$/RuntimePermissions.iml" />
       <module fileurl="file://$PROJECT_DIR$/compiler/compiler.iml" filepath="$PROJECT_DIR$/compiler/compiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/permission-annotations/permission-annotations.iml" filepath="$PROJECT_DIR$/permission-annotations/permission-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtime-permission/runtime-permission.iml" filepath="$PROJECT_DIR$/runtime-permission/runtime-permission.iml" />
+      <module fileurl="file://$PROJECT_DIR$/runtimepermissions.iml" filepath="$PROJECT_DIR$/runtimepermissions.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>

@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
-//apply from: 'maven_push.gradle'
+apply from: 'maven_push.gradle'
 //apply from: rootProject.ext.tp["baseApp"]
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode 2
         versionName "1.1"
 
