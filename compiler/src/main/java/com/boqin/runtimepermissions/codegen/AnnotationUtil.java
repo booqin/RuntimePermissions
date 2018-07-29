@@ -13,7 +13,7 @@ import com.boqin.runtimepermissions.codegen.bean.PermissionElement;
 import com.squareup.javapoet.TypeName;
 
 /**
- * TODO
+ * 注解解析工具类
  * Created by Boqin on 2017/4/5.
  * Modified by Boqin
  *
