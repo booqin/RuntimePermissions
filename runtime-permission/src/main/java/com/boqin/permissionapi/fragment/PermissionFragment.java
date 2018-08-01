@@ -10,6 +10,7 @@ import java.util.Set;
 import com.boqin.permissionapi.R;
 import com.boqin.permissionapi.config.PermissionMapUtil;
 import com.boqin.permissionapi.config.PermissionOpsUtil;
+import com.boqin.permissionapi.interfaces.PermissionsDeniedResultListener;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -169,7 +170,7 @@ public class PermissionFragment extends Fragment {
     /**
      * 设置对应接口
      */
-    public void setPermissionsResultListenter(PermissionsResultListener permissionsResultListener) {
+    public void setPermissionsResultListener(PermissionsResultListener permissionsResultListener) {
         mPermissionsResultListener = permissionsResultListener;
     }
 
@@ -228,22 +229,12 @@ public class PermissionFragment extends Fragment {
      *
      * @description: Created by Boqin on 2017/4/1 17:15
      */
-    public interface PermissionsResultListener {
+    public interface PermissionsResultListener extends PermissionsDeniedResultListener{
 
         /**
          * 允许权限的回调
          */
         void onGranted(String permission);
-
-        /**
-         * 解决权限的回调
-         */
-        void onDenied(String permission);
-
-        /**
-         * 获取说明信息，在权限被拒绝后提示框中使用
-         */
-        String getRationaleMessage(List<String> permissions);
     }
 
 }

@@ -18,7 +18,7 @@ public class PermissionMapUtil {
     private static final String CALENDAR = "日历";
     private static final String CAMERA = "摄像头";
     private static final String CONTACTS = "联系人";
-    private static final String LOCATION = "地址";
+    private static final String LOCATION = "位置";
     private static final String MICROPHONE = "麦克风";
     private static final String PHONE = "电话";
     private static final String SENSORS = "传感器";

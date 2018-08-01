@@ -44,8 +44,7 @@ public class AnnotationUtil {
         }
         if (e.getEnclosingElement() instanceof PackageElement) {
             permissionElement.setPackageName(((PackageElement) e.getEnclosingElement()).getQualifiedName().toString());  //获取包名
-//            simpleName = e.getSimpleName().toString();    //获取类名
-            permissionElement.setTypeName(TypeName.get(e.asType()));
+            permissionElement.setTypeName(TypeName.get(e.asType())); //获取类名，后续生成委托时用到
 
         }
         return permissionElement;
