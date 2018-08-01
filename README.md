@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ...
 
-        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, true);
+        RuntimePermission.tryPermissionByAnnotation(MainActivity.this);
 
     }
 }
