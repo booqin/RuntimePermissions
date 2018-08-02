@@ -31,6 +31,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.2'
 
     testCompile 'junit:junit:4.12'
+//    implementation 'com.github.booqin.RuntimePermissions:runtime-permission:1.2.4'
+//    annotationProcessor 'com.github.booqin.RuntimePermissions:compiler:1.2.4'
     compile project(':runtime-permission')
     annotationProcessor project(':compiler')
+
 }
