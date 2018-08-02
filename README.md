@@ -1,11 +1,11 @@
 # version
 __1.2.4__
 
-# 前言
+## 前言
 　　Google在Android6.0版本中添加了一些新特性，其中之一就是运行时请求权限，用户可以拒绝应用对敏感权限的请求。而对于android开发者，我们只需要将targetSdkVersion配置为23+就能使用该特性。网上已经存在一些流行的解决方案，比如使用注解的[PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher)，通过Rxjava实现的[RxPermissions](https://github.com/tbruyelle/RxPermissions)。前者使用直观，但是注解过多，而且对结果的处理关于麻烦，另外需要自己调用注解生成的类文件。而RxPermissions使用方便（通过Fragment管理权限相关的回调方法），但在使用上不够解耦，直观，其对权限请求结果的处理也缺少封装。根据自己对Android权限机制的理解，同时参考两者的优点，实现了[RuntimePermission](https://github.com/booqin/RuntimePermissions)。
 
 
-# 简介
+## 简介
 　　RuntimePermission提供了注解的方式来实现权限请求，虽然大大减少了的模板代码，但前提，使用者需要知道哪个Activity需要使用敏感权限，以及使用哪些敏感权限，这是运行时授权的基本要求。
 
 　　RuntimePermission覆盖了大部分权限操作的场景，尽量减少权限对代码的耦合，apt生成的权限逻辑处理代码通过反射去调取，在最乐观的条件下，仅需要在对于Activity上加上需要使用权限的注解，然后在代码中手动执行下_RuntimePermission.tryPermissionByAnnotation(Activity.this)_即可:
