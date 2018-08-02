@@ -1,6 +1,10 @@
 apply plugin: 'java'
 //apply from: 'maven_push.gradle'
 
+apply plugin: 'maven'
+
+group = 'com.github.booqin'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
