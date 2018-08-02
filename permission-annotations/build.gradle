@@ -7,9 +7,3 @@ dependencies {
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
-
-//依赖相关库
-dependencies {
-    compile "com.squareup:javapoet:$JAVAPOET_VERSION"
-
-}

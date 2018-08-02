@@ -32,8 +32,5 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     compile project(':runtime-permission')
-//    compile 'com.xinguangnet.permission:runtime-permissions:1.0.2-SNAPSHOT'
-//    compile 'com.xinguangnet.permission:runtime-permissions:1.0.1-SNAPSHOT'
-//    annotationProcessor 'com.xinguangnet.permission:compiler:1.0.1-SNAPSHOT'
     annotationProcessor project(':compiler')
 }
