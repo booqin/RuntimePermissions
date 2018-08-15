@@ -23,3 +23,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-ignorewarnings
+
+#动态权限生成的***ActivityGen ,然后反射去调用
+-keep class **.*Gen { *; }
