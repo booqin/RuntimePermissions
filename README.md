@@ -122,7 +122,16 @@ public class MainActivity extends AppCompatActivity {
 ```java
     RuntimePermission.tryPermissionByAnnotation(final Activity activity, String... permissions);
 ```
-　　
+
+## proguard
+
+```java
+-ignorewarnings
+
+#动态权限生成的***ActivityGen ,然后反射去调用
+-keep class **.*Gen { *; }
+```
+
 # TODO
 - 添加对Fragment的支持
 - ~~对在多个权限中根据需求执行单个权限的请求~~已在v1.0.1中添加
