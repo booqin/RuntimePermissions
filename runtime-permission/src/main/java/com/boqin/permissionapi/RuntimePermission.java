@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.boqin.permissionapi.fragment.PermissionFragment;
+import com.boqin.permissionapi.interfaces.PermissionsDeniedResultListener;
 import com.boqin.runtimepermissions.AnnotationConstant;
 
 import android.app.Activity;
@@ -39,6 +40,17 @@ public class RuntimePermission {
      * @param isMustGranted 是否必须允许
      */
     public static void tryPermissionByAnnotation(final Activity activity, boolean isMustGranted) {
+        tryPermissionByAnnotation(activity, isMustGranted, null);
+    }
+
+    /**
+     * 请求权限操作
+     *
+     * @param activity      宿主Activity
+     * @param isMustGranted 是否必须允许
+     * @param permissionsDeniedResultListener 缺陷拒绝后的操作接口
+     */
+    public static void tryPermissionByAnnotation(final Activity activity, boolean isMustGranted, final PermissionsDeniedResultListener permissionsDeniedResultListener) {
         PermissionFragment.PermissionsResultListener permissionsResultListener = new PermissionFragment.PermissionsResultListener() {
             @Override
             public void onGranted(String permission) {
@@ -47,12 +59,18 @@ public class RuntimePermission {
 
             @Override
             public void onDenied(String permission) {
-
+                if (permissionsDeniedResultListener!=null) {
+                    permissionsDeniedResultListener.onDenied(permission);
+                }
             }
 
             @Override
             public String getRationaleMessage(List<String> permissions) {
-                return null;
+                if (permissionsDeniedResultListener!=null) {
+                    return permissionsDeniedResultListener.getRationaleMessage(permissions);
+                }else {
+                    return null;
+                }
             }
         };
         String[] strings = getPermissionStringFromAnno(activity);
@@ -138,7 +156,7 @@ public class RuntimePermission {
         }
 
         if (fragment instanceof PermissionFragment) {
-            ((PermissionFragment) fragment).setPermissionsResultListenter(permissionsResultListener);
+            ((PermissionFragment) fragment).setPermissionsResultListener(permissionsResultListener);
             ((PermissionFragment) fragment).doRequestPermissions(
                     permissions, isMustGranted);
         }

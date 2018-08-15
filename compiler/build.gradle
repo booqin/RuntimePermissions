@@ -1,9 +1,15 @@
 apply plugin: 'java'
 //apply from: 'maven_push.gradle'
+apply plugin: 'maven'
+
+group = 'com.github.booqin'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':permission-annotations')
+    compile "com.squareup:javapoet:$JAVAPOET_VERSION"
+
+
 }
 
 sourceCompatibility = "1.7"

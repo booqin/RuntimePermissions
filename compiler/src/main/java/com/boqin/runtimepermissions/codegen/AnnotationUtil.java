@@ -13,7 +13,7 @@ import com.boqin.runtimepermissions.codegen.bean.PermissionElement;
 import com.squareup.javapoet.TypeName;
 
 /**
- * TODO
+ * 注解解析工具类
  * Created by Boqin on 2017/4/5.
  * Modified by Boqin
  *
@@ -44,8 +44,7 @@ public class AnnotationUtil {
         }
         if (e.getEnclosingElement() instanceof PackageElement) {
             permissionElement.setPackageName(((PackageElement) e.getEnclosingElement()).getQualifiedName().toString());  //获取包名
-//            simpleName = e.getSimpleName().toString();    //获取类名
-            permissionElement.setTypeName(TypeName.get(e.asType()));
+            permissionElement.setTypeName(TypeName.get(e.asType())); //获取类名，后续生成委托时用到
 
         }
         return permissionElement;

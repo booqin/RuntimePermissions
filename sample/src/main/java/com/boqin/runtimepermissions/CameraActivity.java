@@ -1,6 +1,9 @@
 package com.boqin.runtimepermissions;
 
+import java.util.List;
+
 import com.boqin.permissionapi.RuntimePermission;
+import com.boqin.permissionapi.interfaces.PermissionsDeniedResultListener;
 
 import android.Manifest;
 import android.os.Bundle;
@@ -24,18 +27,31 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         findViewById(R.id.bt_camera).setOnClickListener(this);
+        findViewById(R.id.bt_rationale).setOnClickListener(this);
 
     }
 
     @PermissionGranted(Manifest.permission.CAMERA)
-    public void starCamera(){
-        Toast.makeText(this, "开始录像", Toast.LENGTH_SHORT).show();
+    public void startCamera(){
+        Toast.makeText(this, "start", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.bt_camera) {
             RuntimePermission.tryPermissionByAnnotation(this);
+        }else if(view.getId() == R.id.bt_rationale) {
+            RuntimePermission.tryPermissionByAnnotation(this, false, new PermissionsDeniedResultListener() {
+                @Override
+                public void onDenied(String permission) {
+
+                }
+
+                @Override
+                public String getRationaleMessage(List<String> permissions) {
+                    return "hello you got a rationale message";
+                }
+            });
         }
     }
 }

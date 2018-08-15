@@ -2,9 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
+
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.boqin.runtimepermission"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -32,10 +34,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.2'
+
     testCompile 'junit:junit:4.12'
+//    implementation 'com.github.booqin.RuntimePermissions:runtime-permission:1.2.4'
+//    annotationProcessor 'com.github.booqin.RuntimePermissions:compiler:1.2.4'
     compile project(':runtime-permission')
-//    compile 'com.xinguangnet.permission:runtime-permissions:1.0.2-SNAPSHOT'
-//    compile 'com.xinguangnet.permission:runtime-permissions:1.0.1-SNAPSHOT'
-//    annotationProcessor 'com.xinguangnet.permission:compiler:1.0.1-SNAPSHOT'
     annotationProcessor project(':compiler')
+
 }

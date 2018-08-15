@@ -1,10 +1,12 @@
 package com.boqin.runtimepermissions;
 
 import com.boqin.permissionapi.RuntimePermission;
+import com.boqin.permissionapi.fragment.PermissionFragment;
 
 import android.Manifest;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,21 +24,33 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private Button mPermission;
+    private Button mSet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPermission = (Button) findViewById(R.id.bt_permission);
+        mPermission = findViewById(R.id.bt_permission);
+        mSet = findViewById(R.id.bt_set);
 
-//        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
+        RuntimePermission.tryPermissionByAnnotation(MainActivity.this, true);
 
         mPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
-//                MainActivity.this.startActivity(intent);
-                RuntimePermission.tryPermissionByAnnotation(MainActivity.this, false);
+                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
+        mSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent localIntent = new Intent();
+                localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                localIntent.setData(Uri.fromParts("package", MainActivity.this.getPackageName(), null));
+                MainActivity.this.startActivity(localIntent);
             }
         });
     }
